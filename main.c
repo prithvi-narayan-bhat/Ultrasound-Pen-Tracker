@@ -65,7 +65,7 @@ void init_TM4C_hardware(void)
 
     initLcd();                                      // Initialise I2C display device
     initEeprom(); 					                // Initialize MCU to use EEPROM
-    pwm_init();                                     // PWM for buzzer
+    pwm_init();                                     // Initialise PWM
 
     initUart0();                                    // Initialise UART0
     setUart0BaudRate(115200, 40e6);                 // Set UART baud rate and clock
@@ -86,7 +86,6 @@ void init_TM4C_hardware(void)
     enableNvicInterrupt(INT_GPIOA);                 // Enable interrupt after all configurations are complete
 
     timer_init();                                   // Initialise timers
-    pwm_init();                                     // Initialise PWM
 }
 
 /**
@@ -126,7 +125,7 @@ void sC_interrupt_handler(void)
 }
 
 /**
- *      @brief ISR for when the MCU receives input from the comparator for Ultrasound Sensor C
+ *      @brief Watchdog timer ISR
  **/
 void timeout_interrupt_handler(void)
 {
@@ -207,8 +206,8 @@ void ir_interrupt_handler(void)
     )
     {
         g_timer_A_accumulated = 0;
-        g_timer_A_accumulated = 0;
-        g_timer_A_accumulated = 0;
+        g_timer_B_accumulated = 0;
+        g_timer_C_accumulated = 0;
         memset(g_timer_A_accumulated, 0, sizeof(g_timer_A_accumulated));
         memset(g_timer_B_accumulated, 0, sizeof(g_timer_B_accumulated));
         memset(g_timer_C_accumulated, 0, sizeof(g_timer_C_accumulated));
@@ -217,7 +216,7 @@ void ir_interrupt_handler(void)
     WTIMER0_CTL_R &= ~TIMER_CTL_TAEN;           // Stop timer 0 - Sensor A
     WTIMER0_CTL_R &= ~TIMER_CTL_TBEN;           // Stop timer 0 - Sensor B
     WTIMER1_CTL_R &= ~TIMER_CTL_TAEN;           // Stop timer 1 - Sensor C
-    WTIMER3_CTL_R &= ~TIMER_CTL_TAEN;           // Stop timer 1 - Sensor C
+    WTIMER3_CTL_R &= ~TIMER_CTL_TAEN;           // Stop timer 3 - Watchdog
 
     WTIMER0_TAV_R = 0;                          // Reset timer to 0 before starting
     WTIMER0_TBV_R = 0;                          // Reset timer to 0 before starting
@@ -253,14 +252,17 @@ void main(void)
 
     while (1)
     {
-        // enableNvicInterrupt(INT_GPIOD);         // Enable interrupts on PORTD to capture IR
         string_input_get(&user_data);           // Read user input
         string_parse(&user_data);               // Parse user input
 
         IS_COMMAND("sensor", 4)                 // Compare and act on user input
         {
             // Store sensor coordinates in EEPROM
-            update_sensor_coordinates(getFieldString(&user_data, 1), (int32_t)getFieldInteger(&user_data, 2), (int32_t)getFieldInteger(&user_data, 3));
+            update_sensor_coordinates (
+                                        getFieldString(&user_data, 1),
+                                        (int32_t)getFieldInteger(&user_data, 2),
+                                        (int32_t)getFieldInteger(&user_data, 3)
+                                    );
             putsUart0("Assuming input coordinates are in mm\r\n\r\n");
             continue;
         }
