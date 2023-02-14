@@ -3,6 +3,9 @@
 ## Introduction
 The aim of the project is to capture the position of a stylus on any two-dimensional Cartesian plane and obtain its coordinates in software. This project primarily uses the principles of ultrasound waves and their propagation through air to determine the coordinates of the stylus. The project also uses peripherals such as Wide timers, PWMs, I2C and GPIOs in the TM4C123GH6PM microcontroller on the TI Tiva C launchpad board.
 
+## Compilation
+This project has been developed entirely on TI Code Composer Studio. Compiling it and downloading it onto the Tiva board is through the IDE for now. I'm in the process of organising the project into a CMake compatible one that can be compiled and dowloaded without the IDE.
+
 ## Hardware
 The project implements included the development of the Stylus and the Receiver circuit
 ### Stylus
