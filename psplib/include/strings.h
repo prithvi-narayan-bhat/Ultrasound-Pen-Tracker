@@ -6,7 +6,7 @@
 #ifndef STRINGS_H
 #define STRINGS_H
 
-#include "uart0.h"
+#include "uart.h"
 #include "inttypes.h"
 
 #define MAX_STRING_LENGTH   80          // Maximum number of characters in input string

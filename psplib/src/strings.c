@@ -4,7 +4,7 @@
 *      @brief Source file for string parsing and allied operational commands
 **/
 
-#include "uart0.h"
+#include "uart.h"
 #include "strings.h"
 #include "inttypes.h"
 

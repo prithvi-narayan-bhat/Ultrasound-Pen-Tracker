@@ -20,14 +20,14 @@
 #include "eeprom.h"
 #include "timer.h"
 #include "nvic.h"
-#include "uart0.h"
+#include "uart.h"
 #include "wait.h"
 #include "strings.h"
 #include <stdio.h>
 #include "eeprom_memory_map.h"
 #include "commands.h"
 #include <string.h>
-#include "i2c0_lcd.h"
+#include "lcd.h"
 
 #define IS_COMMAND(string, count)       if(isCommand(&user_data, string, count))
 #define RESET                           (NVIC_APINT_R = (NVIC_APINT_VECTKEY | NVIC_APINT_SYSRESETREQ))
