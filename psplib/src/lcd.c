@@ -23,8 +23,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "tm4c123gh6pm.h"
-#include "i2c0.h"
-#include "i2c0_lcd.h"
+#include "i2c.h"
+#include "lcd.h"
 #include "wait.h"
 
 #define LCD_ADD 0x27
@@ -81,6 +81,6 @@ void putsLcd(uint8_t row, uint8_t col, const char str[])
 {
     uint8_t i = 0;
     writeTextLcdCommand(0x80 + (row & 1) * 64 + (row & 2) * 10 + col);
-    while (str[i] != NULL)
+    while (str[i] != '\0')
         writeTextLcdData(str[i++]);
 }

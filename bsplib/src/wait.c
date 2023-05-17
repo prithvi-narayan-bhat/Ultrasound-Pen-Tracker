@@ -36,3 +36,14 @@ void waitMicrosecond(uint32_t us)
     __asm("WMS_DONE0:");                        // ---
                                                 // 40 clocks/us + error
 }
+
+void _delay_cycles(uint32_t cycles)
+{
+    uint32_t i;
+    for (i = 0; i < cycles; i++)
+    {
+        __asm("NOP"); // NOPs
+        __asm("NOP"); // NOPs
+        __asm("NOP"); // NOPs
+    }
+}

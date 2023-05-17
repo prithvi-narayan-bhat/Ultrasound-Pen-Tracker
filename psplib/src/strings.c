@@ -7,6 +7,8 @@
 #include "uart.h"
 #include "strings.h"
 #include "inttypes.h"
+#include <stdlib.h>
+#include <string.h>
 
 #define ASCII_BACKSPACE         8
 #define ASCII_DELETE            127

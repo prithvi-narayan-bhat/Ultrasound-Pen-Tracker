@@ -94,7 +94,7 @@ void init_TM4C_hardware(void)
  **/
 void sA_interrupt_handler(void)
 {
-    g_timer_A_FIFO[g_timer_A_accumulated++] = WTIMER0_TAV_R;    // Read timer register
+    g_timer_A_FIFO[(uint32_t)g_timer_A_accumulated++] = WTIMER0_TAV_R;    // Read timer register
     WTIMER0_CTL_R &= ~TIMER_CTL_TAEN;                           // Disable timer
     WTIMER0_TAV_R = 0;                                          // Reset Register
     WTIMER0_ICR_R |= TIMER_ICR_CAECINT;                         // Reset Timer interrupt
@@ -106,7 +106,7 @@ void sA_interrupt_handler(void)
  **/
 void sB_interrupt_handler(void)
 {
-    g_timer_B_FIFO[g_timer_B_accumulated++] = WTIMER0_TBV_R;    // Read timer register
+    g_timer_B_FIFO[(uint32_t)g_timer_B_accumulated++] = WTIMER0_TBV_R; // Read timer register
     WTIMER0_CTL_R &= ~TIMER_CTL_TBEN;                           // Disable timer
     WTIMER0_TBV_R = 0;                                          // Reset Register
     WTIMER0_ICR_R |= TIMER_ICR_CBECINT;                         // Reset Timer interrupt
@@ -118,7 +118,7 @@ void sB_interrupt_handler(void)
  **/
 void sC_interrupt_handler(void)
 {
-    g_timer_C_FIFO[g_timer_C_accumulated++] = WTIMER1_TAV_R;    // Read timer register
+    g_timer_C_FIFO[(uint32_t)g_timer_C_accumulated++] = WTIMER1_TAV_R; // Read timer register
     WTIMER1_CTL_R &= ~TIMER_CTL_TAEN;                           // Disable timer
     WTIMER1_TAV_R = 0;                                          // Reset Register
     WTIMER1_ICR_R |= TIMER_ICR_CAECINT;                         // Reset Timer interrupt
@@ -201,17 +201,17 @@ void ir_interrupt_handler(void)
 
     // Accept only a max of five values in FIFO to average
     // Reset count and flush FIFO
-    if (g_timer_A_accumulated >= count||
-        g_timer_B_accumulated >= count||
-        g_timer_C_accumulated >= count
+    if ((uint32_t)g_timer_A_accumulated >= count||
+        (uint32_t)g_timer_B_accumulated >= count||
+        (uint32_t)g_timer_C_accumulated >= count
     )
     {
         g_timer_A_accumulated = 0;
         g_timer_A_accumulated = 0;
         g_timer_A_accumulated = 0;
-        memset(g_timer_A_accumulated, 0, sizeof(g_timer_A_accumulated));
-        memset(g_timer_B_accumulated, 0, sizeof(g_timer_B_accumulated));
-        memset(g_timer_C_accumulated, 0, sizeof(g_timer_C_accumulated));
+        memset((void *) g_timer_A_accumulated, 0, sizeof(g_timer_A_accumulated));
+        memset((void *) g_timer_B_accumulated, 0, sizeof(g_timer_B_accumulated));
+        memset((void *) g_timer_C_accumulated, 0, sizeof(g_timer_C_accumulated));
     }
 
     WTIMER0_CTL_R &= ~TIMER_CTL_TAEN;           // Stop timer 0 - Sensor A
@@ -238,7 +238,7 @@ void main(void)
     init_TM4C_hardware();
     char string[100];
 
-    string_data_t *user_data;
+    string_data_t user_data;
     uint16_t character_count;
     uint8_t i;
 
@@ -293,7 +293,7 @@ void main(void)
 
             if (average > MAX_AVERAGES)
             {
-                fprintf(string, "ERROR! Max average of %d\r\n\r\n", MAX_AVERAGES);
+                sprintf(string, "ERROR! Max average of %d\r\n\r\n", MAX_AVERAGES);
                 putsUart0(string);
             }
             else

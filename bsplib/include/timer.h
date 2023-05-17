@@ -16,12 +16,12 @@ typedef enum
     WTIMER_B = 1,
     WTIMER_C = 2,
     WTIMER_W = 3,
-} timer_t;
+} timers_t;
 
 // Function Declarations
 void timer_init(void);
 void timer_start(void);
-uint32_t timer_stop(timer_t timer);
+uint32_t timer_stop(timers_t timer);
 void pwm_init(void);
 
 #endif

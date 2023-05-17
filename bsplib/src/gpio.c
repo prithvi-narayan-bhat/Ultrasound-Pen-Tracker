@@ -20,6 +20,7 @@
 #include <stdbool.h>
 #include "tm4c123gh6pm.h"
 #include "gpio.h"
+#include "wait.h"
 
 // Bit offset of the registers relative to bit 0 of DATA_R at 3FCh
 // reg offset x 4 bytes / reg x 8 bits / byte

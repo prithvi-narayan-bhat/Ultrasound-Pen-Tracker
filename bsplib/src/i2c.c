@@ -20,7 +20,8 @@
 #include <stdbool.h>
 #include "tm4c123gh6pm.h"
 #include "gpio.h"
-#include "i2c0.h"
+#include "i2c.h"
+#include "wait.h"
 
 // PortB masks
 #define SDA_MASK 8
@@ -200,5 +201,3 @@ bool isI2c0Error(void)
 {
     return (I2C0_MCS_R & I2C_MCS_ERROR);
 }
-
-

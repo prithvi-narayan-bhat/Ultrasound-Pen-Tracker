@@ -9,6 +9,7 @@
 #include <inttypes.h>
 #include "gpio.h"
 #include "nvic.h"
+#include "wait.h"
 
 #define US_A_IN                 PORTC, 4
 #define US_B_IN                 PORTC, 5
@@ -118,7 +119,7 @@ void timer_start(void)
 *      @param timer to stop and read
 *      @return uint32_t timer register value
 **/
-uint32_t timer_stop(timer_t timer)
+uint32_t timer_stop(timers_t timer)
 {
     uint32_t timer_val;
     switch (timer)
