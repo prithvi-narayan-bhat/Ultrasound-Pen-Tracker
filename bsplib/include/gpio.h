@@ -1,20 +1,11 @@
-// GPIO Library
-// Jason Losh
-
-//-----------------------------------------------------------------------------
-// Hardware Target
-//-----------------------------------------------------------------------------
-
-// Target Platform: EK-TM4C123GXL
-// Target uC:       TM4C123GH6PM
-// System Clock:    -
-
-// Hardware configuration:
-// GPIO APB ports A-F
-
-//-----------------------------------------------------------------------------
-// Device includes, defines, and assembler directives
-//-----------------------------------------------------------------------------
+/**
+ *       @brief GPIO Library (ports A-F)
+ *          Target Platform:    EK-TM4C123GXL
+ *          Target uC:          TM4C123GH6PM
+ *          Hardware:           16MHz XOSC
+ *          Clock:              40Mhz
+ *       @author Jason Losh
+ **/
 
 #ifndef GPIO_H_
 #define GPIO_H_
@@ -32,10 +23,6 @@ typedef enum _PORT
     PORTE = 0x42000000 + (0x400243FC-0x40000000)*32,
     PORTF = 0x42000000 + (0x400253FC-0x40000000)*32
 } PORT;
-
-//-----------------------------------------------------------------------------
-// Subroutines
-//-----------------------------------------------------------------------------
 
 void enablePort(PORT port);
 void disablePort(PORT port);

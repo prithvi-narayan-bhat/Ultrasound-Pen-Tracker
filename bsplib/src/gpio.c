@@ -1,20 +1,11 @@
-// GPIO Library
-// Jason Losh
-
-//-----------------------------------------------------------------------------
-// Hardware Target
-//-----------------------------------------------------------------------------
-
-// Target Platform: EK-TM4C123GXL with LCD/Keyboard Interface
-// Target uC:       TM4C123GH6PM
-// System Clock:    40 MHz
-
-// Hardware configuration:
-// GPIO APB ports A-F
-
-//-----------------------------------------------------------------------------
-// Device includes, defines, and assembler directives
-//-----------------------------------------------------------------------------
+/**
+ *       @brief GPIO Library (ports A-F)
+ *          Target Platform:    EK-TM4C123GXL
+ *          Target uC:          TM4C123GH6PM
+ *          Hardware:           16MHz XOSC
+ *          Clock:              40Mhz
+ *       @author Jason Losh
+ **/
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -22,8 +13,10 @@
 #include "gpio.h"
 #include "wait.h"
 
-// Bit offset of the registers relative to bit 0 of DATA_R at 3FCh
-// reg offset x 4 bytes / reg x 8 bits / byte
+/*
+    Bit offset of the registers relative to bit 0 of DATA_R at 3FCh
+    reg offset x 4 bytes / reg x 8 bits / byte
+*/
 #define OFS_DATA_TO_DIR    1*4*8
 #define OFS_DATA_TO_IS     2*4*8
 #define OFS_DATA_TO_IBE    3*4*8
@@ -38,14 +31,11 @@
 #define OFS_DATA_TO_CR    74*4*8
 #define OFS_DATA_TO_AMSEL 75*4*8
 
-//-----------------------------------------------------------------------------
-// Global variables
-//-----------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-// Subroutines
-//-----------------------------------------------------------------------------
-
+/**
+*      @brief Function to enable ports
+*      @param port enumerated port address
+**/
 void enablePort(PORT port)
 {
     switch(port)
@@ -77,6 +67,10 @@ void enablePort(PORT port)
     _delay_cycles(3);
 }
 
+/**
+ *      @brief Function to disable ports
+ *      @param port enumerated port address
+ **/
 void disablePort(PORT port)
 {
     switch(port)
@@ -102,6 +96,11 @@ void disablePort(PORT port)
     _delay_cycles(3);
 }
 
+/**
+*      @brief Function to configure particular pin as output
+*      @param port enumerated port address
+*      @param pin offset from the base of port address
+**/
 void selectPinPushPullOutput(PORT port, uint8_t pin)
 {
     uint32_t* p;
@@ -113,6 +112,11 @@ void selectPinPushPullOutput(PORT port, uint8_t pin)
     *p = 1;
 }
 
+/**
+*      @brief Function to configure pin as an open-drain output
+*      @param port enumerated port address
+*      @param pin offset from the base of port address
+**/
 void selectPinOpenDrainOutput(PORT port, uint8_t pin)
 {
     uint32_t* p;
@@ -124,6 +128,11 @@ void selectPinOpenDrainOutput(PORT port, uint8_t pin)
     *p = 1;
 }
 
+/**
+*      @brief Function to configure pin to accept digital inputs
+*      @param port enumerated port address
+*      @param pin offset from base of port address
+**/
 void selectPinDigitalInput(PORT port, uint8_t pin)
 {
     uint32_t* p;
@@ -135,6 +144,11 @@ void selectPinDigitalInput(PORT port, uint8_t pin)
     *p = 0;
 }
 
+/**
+ *      @brief Function to configure pin to accept analog inputs
+ *      @param port enumerated port address
+ *      @param pin offset from base of port address
+ **/
 void selectPinAnalogInput(PORT port, uint8_t pin)
 {
     uint32_t* p;
@@ -173,6 +187,11 @@ void setPinCommitControl(PORT port, uint8_t pin)
     *p = 1;
 }
 
+/**
+ *      @brief Function to enable internal pull-up on pin
+ *      @param port enumerated port address
+ *      @param pin offset from base of port address
+ **/
 void enablePinPullup(PORT port, uint8_t pin)
 {
     uint32_t* p;
@@ -180,6 +199,11 @@ void enablePinPullup(PORT port, uint8_t pin)
     *p = 1;
 }
 
+/**
+ *      @brief Function to disable internal pull-up on pin
+ *      @param port enumerated port address
+ *      @param pin offset from base of port address
+ **/
 void disablePinPullup(PORT port, uint8_t pin)
 {
     uint32_t* p;
@@ -187,6 +211,11 @@ void disablePinPullup(PORT port, uint8_t pin)
     *p = 0;
 }
 
+/**
+ *      @brief Function to enable internal pull-down on pin
+ *      @param port enumerated port address
+ *      @param pin offset from base of port address
+ **/
 void enablePinPulldown(PORT port, uint8_t pin)
 {
     uint32_t* p;
@@ -194,6 +223,11 @@ void enablePinPulldown(PORT port, uint8_t pin)
     *p = 1;
 }
 
+/**
+ *      @brief Function to disable internal pull-down on pin
+ *      @param port enumerated port address
+ *      @param pin offset from base of port address
+ **/
 void disablePinPulldown(PORT port, uint8_t pin)
 {
     uint32_t* p;
@@ -201,9 +235,15 @@ void disablePinPulldown(PORT port, uint8_t pin)
     *p = 0;
 }
 
+/**
+ *      @brief Function to enable alternative pin function from MUX
+ *      @param port enumerated port address
+ *      @param pin offset from base of port address
+ *      @param fn alternative function to be enabled
+ **/
 void setPinAuxFunction(PORT port, uint8_t pin, uint32_t fn)
 {
-    // call with header file shifted values or 4-bit number
+    // Call with header file shifted values or 4-bit number
     if (fn <= 15)
         fn = fn << (pin*4);
     else
@@ -228,12 +268,17 @@ void setPinAuxFunction(PORT port, uint8_t pin, uint32_t fn)
         case PORTF:
             GPIO_PORTF_PCTL_R = (GPIO_PORTF_PCTL_R & ~(0x0000000F << (pin*4))) | fn;
     }
-    // set AFSEL bit only if using aux function, otherwise clear bit
+    // Set AFSEL bit only if using aux function, otherwise clear bit
     uint32_t* p;
     p = (uint32_t*)port + pin + OFS_DATA_TO_AFSEL;
     *p = (fn > 0);
 }
 
+/**
+*      @brief Function to configure pin to trigger interrupt on rising edge of input signal
+*      @param port enumerated port address
+*      @param pin offset from base of port address
+**/
 void selectPinInterruptRisingEdge(PORT port, uint8_t pin)
 {
     uint32_t* p;
@@ -245,6 +290,11 @@ void selectPinInterruptRisingEdge(PORT port, uint8_t pin)
     *p = 1;
 }
 
+/**
+ *      @brief Function to configure pin to trigger interrupt on falling edge of input signal
+ *      @param port enumerated port address
+ *      @param pin offset from base of port address
+ **/
 void selectPinInterruptFallingEdge(PORT port, uint8_t pin)
 {
     uint32_t* p;
@@ -256,6 +306,11 @@ void selectPinInterruptFallingEdge(PORT port, uint8_t pin)
     *p = 0;
 }
 
+/**
+ *      @brief Function to configure pin to trigger interrupt on both rising and falling edges of input signal
+ *      @param port enumerated port address
+ *      @param pin offset from base of port address
+ **/
 void selectPinInterruptBothEdges(PORT port, uint8_t pin)
 {
     uint32_t* p;
@@ -265,6 +320,11 @@ void selectPinInterruptBothEdges(PORT port, uint8_t pin)
     *p = 1;
 }
 
+/**
+ *      @brief Function to configure pin to trigger interrupt on high level of input signal
+ *      @param port enumerated port address
+ *      @param pin offset from base of port address
+ **/
 void selectPinInterruptHighLevel(PORT port, uint8_t pin)
 {
     uint32_t* p;
@@ -274,6 +334,11 @@ void selectPinInterruptHighLevel(PORT port, uint8_t pin)
     *p = 1;
 }
 
+/**
+ *      @brief Function to configure pin to trigger interrupt on low level of input signal
+ *      @param port enumerated port address
+ *      @param pin offset from base of port address
+ **/
 void selectPinInterruptLowLevel(PORT port, uint8_t pin)
 {
     uint32_t* p;
@@ -283,6 +348,11 @@ void selectPinInterruptLowLevel(PORT port, uint8_t pin)
     *p = 0;
 }
 
+/**
+ *      @brief Function to enable pin to generate interrupts
+ *      @param port enumerated port address
+ *      @param pin offset from base of port address
+ **/
 void enablePinInterrupt(PORT port, uint8_t pin)
 {
     uint32_t* p;
@@ -290,6 +360,11 @@ void enablePinInterrupt(PORT port, uint8_t pin)
     *p = 1;
 }
 
+/**
+ *      @brief Function to disable pin to generate interrupts
+ *      @param port enumerated port address
+ *      @param pin offset from base of port address
+ **/
 void disablePinInterrupt(PORT port, uint8_t pin)
 {
     uint32_t* p;
@@ -297,6 +372,11 @@ void disablePinInterrupt(PORT port, uint8_t pin)
     *p = 0;
 }
 
+/**
+ *      @brief Function to clear interrupt generated on pin
+ *      @param port enumerated port address
+ *      @param pin offset from base of port address
+ **/
 void clearPinInterrupt(PORT port, uint8_t pin)
 {
     uint32_t* p;
@@ -304,6 +384,11 @@ void clearPinInterrupt(PORT port, uint8_t pin)
     *p = 1;
 }
 
+/**
+ *      @brief Function to set high value on a pin
+ *      @param port enumerated port address
+ *      @param pin offset from base of port address
+ **/
 void setPinValue(PORT port, uint8_t pin, bool value)
 {
     uint32_t* p;
@@ -311,6 +396,11 @@ void setPinValue(PORT port, uint8_t pin, bool value)
     *p = value;
 }
 
+/**
+ *      @brief Function to read state of pin
+ *      @param port enumerated port address
+ *      @param pin offset from base of port address
+ **/
 bool getPinValue(PORT port, uint8_t pin)
 {
     uint32_t* p;
@@ -318,6 +408,11 @@ bool getPinValue(PORT port, uint8_t pin)
     return *p;
 }
 
+/**
+ *      @brief Function to set value of a port
+ *      @param port enumerated port address
+ *      @param value value to be set
+ **/
 void setPortValue(PORT port, uint8_t value)
 {
     switch(port)
@@ -342,6 +437,10 @@ void setPortValue(PORT port, uint8_t value)
     }
 }
 
+/**
+ *      @brief Function to read the value of a port
+ *      @param port enumerated port address
+ **/
 uint8_t getPortValue(PORT port)
 {
     uint8_t value;
