@@ -1,32 +1,15 @@
-// Clock Library
-// Jason Losh
-
-//-----------------------------------------------------------------------------
-// Hardware Target
-//-----------------------------------------------------------------------------
-
-// Target Platform: EK-TM4C123GXL
-// Target uC:       TM4C123GH6PM
-// System Clock:    -
-
-// Hardware configuration:
-// 16 MHz external crystal oscillator
-
-//-----------------------------------------------------------------------------
-// Device includes, defines, and assembler directives
-//-----------------------------------------------------------------------------
+/**
+ *       @brief Clock Library
+ *          Target Platform:    EK-TM4C123GXL
+ *          Target uC:          TM4C123GH6PM
+ *          Hardware:           16MHz XOSC
+ *          Clock:              40Mhz
+ *       @author Jason Losh
+ **/
 
 #include <stdint.h>
 #include "clock.h"
 #include "tm4c123gh6pm.h"
-
-//-----------------------------------------------------------------------------
-// Global variables
-//-----------------------------------------------------------------------------
-
-//-----------------------------------------------------------------------------
-// Subroutines
-//-----------------------------------------------------------------------------
 
 // Initialize system clock to 40 MHz using PLL and 16 MHz crystal oscillator
 void initSystemClockTo40Mhz(void)
