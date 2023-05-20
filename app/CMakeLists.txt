@@ -7,11 +7,11 @@ add_executable(upats
 )
 
 target_include_directories(upats PUBLIC
-    ${BSP_INC_DIR}
-    ${PSP_INC_DIR}
+    ${BOARD_INC_DIR}
+    ${UTILS_INC_DIR}
 )
 
 target_link_libraries(upats PRIVATE
-    BSP_LIBRARY
-    PSP_LIBRARY
+    BOARD_LIB
+    UTILS_LIB
 )
