@@ -3,12 +3,17 @@
  *           Target Platform:   EK-TM4C123GXL
  *           Target uC:         TM4C123GH6PM
  *           Hardware:          16MHz XOSC
- *       @author Jason Losh
+ *       @author Prithvi Bhat (with references from Jason Losh's Library)
  **/
 
 #ifndef CLOCK_H_
 #define CLOCK_H_
 
-void initSystemClockTo40Mhz(void);
+typedef enum
+{
+    SYS_CLK_40MHZ = 0,
+} sysClk_t;
+
+void initSystemClock(sysClk_t sysClk);
 
 #endif

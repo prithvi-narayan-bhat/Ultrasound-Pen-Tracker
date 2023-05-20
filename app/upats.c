@@ -50,7 +50,7 @@ bool ir_in, sA_in, sB_in, sC_in;
  **/
 void init_TM4C_hardware(void)
 {
-    initSystemClockTo40Mhz(); 		                // Initialize system clock
+    initSystemClock(SYS_CLK_40MHZ);	                // Initialize system clock
 
     enablePort(PORTC);                              // Initialize clocks on PORT C
     enablePort(PORTD); 				                // Initialize clocks on PORT D
